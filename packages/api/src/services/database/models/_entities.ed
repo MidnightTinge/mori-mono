@@ -1,0 +1,106 @@
+Definition {
+    name "Mori Definition"
+    version "0.0.1"
+    author "MidnightTinge"
+}
+
+Database {
+    name "mori"
+    engine "postgres"
+    encoding "utf8"
+}
+
+
+
+Entity user {
+    id serial pk
+    username string
+    password string
+
+    Indexes {
+        Unique lower(username)
+    }
+
+    Associations {
+        HasMany session On session.owner
+        HasMany shelves Through shelf_owners On shelf_owners.user
+        HasMany drops On drop.owner
+        HasMany flows On flow.owner
+    }
+}
+
+Entity session {
+    id serial pk
+    owner user
+    token string
+    expiration timestamptz
+
+    Indexes {
+        Unique token
+    }
+
+    Associations {
+        BelongsTo user Via owner On user.id
+    }
+}
+
+
+
+Entity tag {
+    id serial pk
+    name string
+    description string?
+}
+
+Entity tagged_items {
+    tag int
+    item_id int
+    item_type text
+
+    Indexes {
+        Unique tag item_id item_type
+        item_type item_id
+        tag
+    }
+
+    Associations {
+        BelongsTo tag Via tag On tag.id
+    }
+}
+
+Entity forest {
+    id serial pk
+    owner int
+    name string
+    description string?
+
+    Associations {
+        HasMany trees On tree.forest
+        BelongsTo user Via owner On user.id
+    }
+}
+
+Entity tree {
+    id serial pk
+    name string
+    description string?
+    forest int
+
+    Associations {
+        BelongsTo forest Via forest On forest.id
+        HasMany leaves On leaf.tree
+    }
+}
+
+Entity audit {
+    id serial pk
+    user int
+    verb string
+    target string
+    target_id int
+    timestamp timestamptz
+
+    Associations {
+        BelongsTo user Via user On user.id
+    }
+}

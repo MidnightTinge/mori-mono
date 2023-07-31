@@ -1,0 +1,23 @@
+{
+  "name": "@mori-app/utils",
+  "packageManager": "yarn@3.5.0",
+  "scripts": {
+    "build": "tsup --config tsup.config.ts",
+    "watch": "tsup --watch src --config tsup.config.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "dependencies": {
+    "tsup": "^7.1.0"
+  }
+}
